@@ -51,14 +51,58 @@ print(paste("There are", row_number, "rows and", column_number, "columns in this
 
 # Prepare/combine the data for plotting ------------------------
 # How can you combine this data into one data.frame?
+"rename columns for consistency"
+data_normalized <- data_normalized %>% dplyr::rename(gene_id = X)
+data_filtered <- data_filtered %>%
+  rename (
+    sample_id = X, 
+    cell_type = immunophenotype, 
+    stage = developmental.stage
+  )
+"combine into one data frame, join by sample_id in two data, 
+one row per (gene, sample)"
+data_normalized_long <- data_normalized %>%
+  pivot_longer(
+    cols = -c(gene_id, gene_symbol),   # all sample columns become rows
+    names_to  = "sample_id",
+    values_to = "expression"
+  )
 
-
+combined_df <- data_normalized_long %>% 
+  left_join(data_filtered, by = "sample_id")
+head(combined_df)
+dim (combined_df)
+ "combined_df has gene_id, gene_symbol, sample_id, expression,
+characteristics, cell_tyep, stage"
 
 # Plot the data --------------------------
 ## Plot the expression by cell type
 ## Can use boxplot() or geom_boxplot() in ggplot2
+"choose genes to plot"
+gene_of_interest <- c("Scml2","H19")
+df_plot <- combined_df %>%
+  filter (gene_symbol %in% gene_of_interest) %>%
+  drop_na(cell_type)
+
+plot_gene_expression <- ggplot (df_plot, aes (x = cell_type, y= expression, fill = gene_symbol)) +
+  geom_boxplot(position = position_dodge(width = 0.8), outlier.shape = NA) +
+  facet_wrap(~ stage) +
+  labs(
+    title = "Expression by cell type",
+    x = "Cell type",
+    y = "Expression (CPM/TMM)",
+    fill = "Gene"
+  ) +
+  theme_bw() +
+  theme(axis.text.x = element_text(angle = 30, hjust = 1))
 
 
+print(plot_gene_expression)
 
 ## Save the plot
 ### Show code for saving the plot with ggsave() or a similar function
+ggsave(
+  filename = file.path("results", "two_genes_expression.png"),
+  plot = plot_gene_expression,
+  width = 9, height = 5, dpi = 300
+)
