@@ -22,6 +22,8 @@
 # ex. library(tidyverse)
 
 # Load data here ----------------------
+data_normalized = read.csv = ("GSE60450_GeneLevel_Normalized(CPM.and.TMM)_data.csv")
+data_2 = read.csv
 # Load each file with a meaningful variable name.
 
 
