@@ -20,18 +20,28 @@
 # You may use base R or tidyverse for this exercise
 
 # ex. library(tidyverse)
+library(tidyverse)
 
 # Load data here ----------------------
-data_normalized = read.csv = ("GSE60450_GeneLevel_Normalized(CPM.and.TMM)_data.csv")
-data_2 = read.csv
 # Load each file with a meaningful variable name.
+data_normalized = read.csv ("~/training-program-application-2026/data/GSE60450_GeneLevel_Normalized(CPM.and.TMM)_data.csv")
+data_filtered =  read.csv ("~/training-program-application-2026/data/GSE60450_filtered_metadata.csv")
+
 
 
 
 # Inspect the data -------------------------
+dim(data_normalized)
+dim (data_filtered)
+head (data_normalized)
+head (data_filtered)
 
 # What are the dimensions of each data set? (How many rows/columns in each?)
 # Keep the code here for each file.
+
+row_number = nrow(data_normalized)
+column_number = ncol(data_normalized)
+print(paste("There are", row_number, "rows and", column_number, "columns in this data."))
 
 ## Expression data
 
